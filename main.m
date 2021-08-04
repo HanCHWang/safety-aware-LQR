@@ -1,0 +1,2 @@
+%main function
+clear all
