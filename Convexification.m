@@ -1,3 +1,3 @@
-function [H,C,d]=Convexification(ReObCons)
+function [H,c,d]=Convexification(ReObCons)
     
 end

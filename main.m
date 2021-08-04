@@ -16,6 +16,7 @@ R=;
 h=;
 flag=0;
 x=zeros(n,2);%plane movement
+x(1)=[10,10];
 lambda=0;%no constraint initially
 epsilon=1e-3;
 
@@ -23,8 +24,8 @@ IniSafeLqr=SafeLqr(n,A,B,C,D,Q,R,h);
 [K,l]=control(IniSafeLqr,lambda);%u=Kx+l
 
 for i=1:n
-    FeasiCheck()
     ObConsArray(i)=ObCons(i,h,x(i),flag);
+    flag=FeasiCheck(ObConsArray(i));
     x(i+1)=A*x(i)+B*(K*x(i)+l);
 end
 
