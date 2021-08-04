@@ -1,6 +1,6 @@
 classdef SafeLqr
     properties
-        t                  %time horizon
+        n                 %time horizon
         A                 %state matrix
         B                 %input matrix
         C                 %output state matrix
@@ -11,8 +11,15 @@ classdef SafeLqr
     end
     
     methods
-        
-        r = control(obj)
-        
+        function obj = SafeLqr(n,A,B,C,D,Q,R,h)
+            obj.n=n;
+            obj.A=A;
+            obj.B=B;
+            obj.C=C;
+            obj.D=D;
+            obj.Q=Q;
+            obj.R=R;
+            obj.h=h;
+        end
     end
 end
