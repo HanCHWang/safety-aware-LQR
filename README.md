@@ -1,2 +1,2 @@
-# safety-critical-LQR
-safety critical LQR for mobile robot path planning
+# safety-aware-LQR
+safety aware LQR for mobile robot path planning
