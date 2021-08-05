@@ -10,12 +10,12 @@ classdef ObCons
         d                  %Convexified Const Term
     end
     methods
-        function obj=ObCons(t,h,xt)
+        function obj=ObCons(t,h,xt,flag)
             obj.flag=flag;
             obj.t=t;
             obj.h=h;
             obj.xt=xt;
-            [obj.H,obj.c,obj.d]=Convexified(obj);
+%             [obj.H,obj.c,obj.d]=Convexified(obj);
         end
     end
     
