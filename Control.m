@@ -5,8 +5,8 @@ function [K,l]  = Control(ReSafeLqr,lambda,ObConsArray,PLQ)
         d(t)=0;
          for i=1:size(ReSafeLqr.h)
              if ObConsArray(t).flag(i)==1
-                 Qlambda{t}=cell2mat(Qlambda{t})+lambda(i,t)*ObConsArray(t).H(i);
-                 C{t}=cell2mat(C{t})+lambda(i,t)*ObConsArray(t).c(i);
+                 Qlambda{t}=Qlambda{t}+lambda(i,t)*ObConsArray(t).H(i);
+                 C{t}=C{t}+lambda(i,t)*ObConsArray(t).c(i);
                  d(t)=d(t)+lambda(i,t)*ObConsArray(t).d(i);
              end
          end

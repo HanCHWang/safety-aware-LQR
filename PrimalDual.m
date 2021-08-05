@@ -1,3 +1,3 @@
-function PrimalDual(SafeLqr,lambda,epsilon)
+function PrimalDual(SafeLqr,ObConsArray,epsilon)
     
 end

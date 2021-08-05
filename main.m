@@ -7,7 +7,7 @@ clear all
 %%
 %define quantities
 n=50;
-stepsize=0.001;
+stepsize=0.1;
 A=[1 0;
     0 1];
 B=[1 0;
@@ -31,14 +31,22 @@ end
 IniSafeLqr=SafeLqr(n,A,B,C,D,Q,R,h);
 [K,l]=Control(IniSafeLqr,lambda,ObConsArray,[1 0;0 1]);%u=Kx+l
 
-for t=1:n
+flagsum=0;
+for t=1:n-1
     ObConsArray(t)=ObCons(t,h,x(:,t),flag);
-    flag=FeasiCheck(ObConsArray(t));
+    flag=FeasiCheck(ObConsArray(t),0);
+    sign=FeasiCheck(ObConsArray(t),1);
     x(:,t+1)=A*x(:,t)+stepsize*B*(K{t}*x(:,t)+l(:,t));
+    flagsum=flagsum+sum(flag);
 end
 
-while sum(ObConsArray.flag)>0
-    
+while flagsum>0
+    flagsum=0;
+    for t=1:n-1
+        flag=FeasiCheck(ObConsArray(t),0);
+        sign=FeasiCheck(ObConsArray(t),1);
+        ObConsArray(t)=ObCons(t,h,x(:,t),flag);
+    end
 end
 
 
