@@ -19,21 +19,22 @@ Q=[1 0;
 R=[1 0;
     0 1];
 h={[5*rand,5*rand,3*rand],[2*rand,2*rand,3*rand],[7*rand,7*rand,3*rand]};%multiple circle
-flag=0;
+flag=zeros(size(h,2));
+sign=zeros(size(h,2));
 x=zeros(2,n);%plane movement
 x(:,1)=[10;10];
 lambda=0;%no constraint initially
 epsilon=1e-3;
 
 for t=1:n
-    ObConsArray(t)=ObCons(t,h,x(:,t),flag);
+    ObConsArray(t)=ObCons(t,h,x(:,t),flag,sign);
 end
 IniSafeLqr=SafeLqr(n,A,B,C,D,Q,R,h);
 [K,l]=Control(IniSafeLqr,lambda,ObConsArray,[1 0;0 1]);%u=Kx+l
 
 flagsum=0;
 for t=1:n-1
-    ObConsArray(t)=ObCons(t,h,x(:,t),flag);
+    ObConsArray(t)=ObCons(t,h,x(:,t),flag,sign);
     flag=FeasiCheck(ObConsArray(t),0);
     sign=FeasiCheck(ObConsArray(t),1);
     x(:,t+1)=A*x(:,t)+stepsize*B*(K{t}*x(:,t)+l(:,t));
@@ -45,8 +46,9 @@ while flagsum>0
     for t=1:n-1
         flag=FeasiCheck(ObConsArray(t),0);
         sign=FeasiCheck(ObConsArray(t),1);
-        ObConsArray(t)=ObCons(t,h,x(:,t),flag);
+        ObConsArray(t)=ObCons(t,h,x(:,t),flag,sign);
     end
+    [H,c,d]=Convexification(ObConsArray);
 end
 
 

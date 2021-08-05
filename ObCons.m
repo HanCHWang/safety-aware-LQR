@@ -11,12 +11,13 @@ classdef ObCons
         d                  %Convexified Const Term
     end
     methods
-        function obj=ObCons(t,h,xt,flag,arg)
+        function obj=ObCons(t,h,xt,flag,sign,arg)
                 obj.flag=flag;
                 obj.t=t;
                 obj.h=h;
                 obj.xt=xt;
-            if nargin==4
+                obj.sign=sign;
+            if nargin==5
                 H=0;
                 c=0;
                 d=0;
