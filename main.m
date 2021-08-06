@@ -47,9 +47,9 @@ while flagsum>0
     flagsum=0;
     [H,c,d]=Convexification(ObConsArray);
     for t=1:n
-        ObConsArray(t)=ObCons(t,h,x(:,t),flag,sign,{H(:,t),c(:,t),d(:,t)});
         flag=FeasiCheck(ObConsArray(t),0);
         sign=FeasiCheck(ObConsArray(t),1);
+        ObConsArray(t)=ObCons(t,h,x(:,t),flag,sign,{H(:,t),c(:,t),d(:,t)});
         flagsum=flagsum+sum(flag);
     end
     [K,l,value(2)]=PrimalDual(IniSafeLqr,ObConsArray,epsilon);
@@ -57,7 +57,10 @@ while flagsum>0
         value(k)-value(k-1)
         [H,c,d]=Convexification(ObConsArray);
         for t=1:n
-            ObConsArray(t)=ObCons(t,h,x(:,t),flag,sign,{H(:,t),c(:,t),d(:,t)});
+            ObConsArray(t).H=H(:,t);
+            ObConsArray(t).c=c(:,t);
+            ObConsArray(t).d=d(:,t);
+%             ObConsArray(t)=ObCons(t,h,x(:,t),flag,sign,{H(:,t),c(:,t),d(:,t)});
         end
         [K,l,value(k+1)]=PrimalDual(IniSafeLqr,ObConsArray,epsilon);
         for t=1:n-1
@@ -66,6 +69,8 @@ while flagsum>0
 
         k=k+1;
     end
+    value(1)=100000;
+    k=2;
 end
 
 
