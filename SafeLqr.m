@@ -8,10 +8,12 @@ classdef SafeLqr
         Q                 %state cost matrix
         R                 %input cost matrix
         h                  %constraints
+        x0                %initial position
+        stepsize       %stepsize
     end
     
     methods
-        function obj = SafeLqr(n,A,B,C,D,Q,R,h)
+        function obj = SafeLqr(n,A,B,C,D,Q,R,h,x0,stepsize)
             obj.n=n;
             obj.A=A;
             obj.B=B;
@@ -20,6 +22,8 @@ classdef SafeLqr
             obj.Q=Q;
             obj.R=R;
             obj.h=h;
+            obj.x0=x0;
+            obj.stepsize=stepsize;
         end
     end
 end
