@@ -1,4 +1,4 @@
-function [K,l]  = Control(ReSafeLqr,lambda,ObConsArray,PLQ)
+function [K,l]  = Control(ReSafeLqr,lambda,lambdahat,ObConsArray,PLQ)
     for t=1:ReSafeLqr.n
         Qlambda{t}=ReSafeLqr.Q;
         C{t}=0;
@@ -21,10 +21,10 @@ function [K,l]  = Control(ReSafeLqr,lambda,ObConsArray,PLQ)
     r(ReSafeLqr.n)=0;
     for t=ReSafeLqr.n:-1:2
         F{t-1}=-ReSafeLqr.A'*F{t}*ReSafeLqr.B*(ReSafeLqr.B'*F{t}*ReSafeLqr.B+ReSafeLqr.R)^(-1)*ReSafeLqr.B'*F{t}*ReSafeLqr.A+Qlambda{t}+ReSafeLqr.A'*F{t}*ReSafeLqr.A;
-        Strans{t-1}=C{t}'+Strans{t}*ReSafeLqr.A;
-        r(t-1)=d(t)+r(t);
+        Strans{t-1}=C{t}'+Strans{t}*ReSafeLqr.A-(Strans(t)*B+lambdahat(:,t)'*ReSafeLqr.G)*(ReSafeLqr.B'*F{t}*ReSafeLqr.B+ReSafeLqr.R)^(-1)*ReSafeLqr.B'*F{t}'*ReSafeLqr.A;
+        r(t-1)=d(t)+r(t)-lambdahat(:,t)'*ReSafeLqr.e;
         K{t-1}=-(ReSafeLqr.R+ReSafeLqr.B'*F{t}*ReSafeLqr.B)^(-1)*(ReSafeLqr.B'*F{t}*ReSafeLqr.A);
-        l(:,t-1)=-(ReSafeLqr.R+ReSafeLqr.B'*F{t}*ReSafeLqr.B)^(-1)*ReSafeLqr.B'*Strans{t}';
+        l(:,t-1)=-(ReSafeLqr.R+ReSafeLqr.B'*F{t}*ReSafeLqr.B)^(-1)*(ReSafeLqr.B'*Strans{t}'+ReSafeLqr.G'*lambdahat(:,t));
     end
     
 end

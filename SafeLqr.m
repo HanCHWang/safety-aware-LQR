@@ -8,6 +8,8 @@ classdef SafeLqr
         Q                 %state cost matrix
         R                 %input cost matrix
         h                  %constraints
+        G                 %input constraint matrix
+        e                  %input constraint const---Gu-e<=0
         x0                %initial position
         stepsize       %stepsize
     end

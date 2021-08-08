@@ -2,6 +2,7 @@ function [K,l,value]=PrimalDual(IniSafeLqr,ObConsArray,epsilon)
 k=2;
 alpha=0.1*1/k;
 lambda=ones(size(IniSafeLqr.h,2),IniSafeLqr.n);
+lambdahat=ones(size(IniSafeLqr.e,1),IniSafeLqr.n);
 x=zeros(2,IniSafeLqr.n);
 x(:,1)=IniSafeLqr.x0;
 u=zeros(2,IniSafeLqr.n);
@@ -15,6 +16,7 @@ for t=1:IniSafeLqr.n-1
     x(:,t+1)=IniSafeLqr.A*x(:,t)+IniSafeLqr.stepsize*IniSafeLqr.B*u(:,t);
     for i=1:size(IniSafeLqr.h,2)
         lambda(i,t)=lambda(i,t)+alpha*ObConsArray(t).sign(i)*(x(:,t)'*ObConsArray(t).H{i}*x(:,t)+ObConsArray(t).c{i}'*x(:,t)+ObConsArray(t).d{i});
+        lambdahat(:,t)=lambdahat(:,t)+alpha*(IniSafeLqr.G*u(:,t)-IniSafeLqr.e);
     end
 end
 
