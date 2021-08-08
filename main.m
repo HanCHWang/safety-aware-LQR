@@ -18,20 +18,34 @@ Q=[1 0;
     0 1];
 R=[1 0;
     0 1];
+G=[1 0;
+    0 1;
+    -1 0;
+    0 -1];
+e=[0.3;
+    0.3;
+    0.3;
+    0.3];
 % h={[5*rand,5*rand,3*rand],[2*rand,2*rand,3*rand],[7*rand,7*rand,3*rand]};%multiple circle
 h={[5,5,0.5]};
+H=cell(size(h,2),n);
+c=cell(size(h,2),n);
+d=cell(size(h,2),n);
 flag=zeros(size(h,2));
 sign=zeros(size(h,2));
 x=zeros(2,n);%plane movement
 x(:,1)=[10;10];
-lambda=0;%no constraint initially
-epsilon=5;
+lambda=zeros(size(h,2),n);%no constraint initially
+lambdahat=ones(size(G,2),n);
+epsilon=1;
+
 
 for t=1:n
-    ObConsArray(t)=ObCons(t,h,x(:,t),flag,sign);
+    ObConsArray(t)=ObCons(t,h,x(:,t),flag,sign,{H(:,t),c(:,t),d(:,t)});
 end
-IniSafeLqr=SafeLqr(n,A,B,C,D,Q,R,h,x(:,1),stepsize);
-[K,l]=Control(IniSafeLqr,lambda,ObConsArray,[1 0;0 1]);%u=Kx+l
+IniSafeLqr=SafeLqr(n,A,B,C,D,Q,R,h,G,e,x(:,1),stepsize);
+% [K,l]=Control(IniSafeLqr,lambda,lambdahat,ObConsArray,[1 0;0 1]);%u=Kx+l
+[K,l]=PrimalDual(IniSafeLqr,ObConsArray,epsilon);
 
 flagsum=0;
 u=zeros(2,IniSafeLqr.n);
@@ -42,17 +56,17 @@ for t=1:n-1
     ObConsArray(t).flag=flag;
     ObConsArray(t).sign=sign;
     u(:,t)=(K{t}*x(:,t)+l(:,t));
-    if u(1,t)>=0.3
-        u(1,t)=0.3;
-    elseif u(1,t)<=-0.3
-        u(1,t)=-0.3;
-    end
-    
-    if u(2,t)>0.3
-        u(2,t)=0.3;
-    elseif u(2,t)<-0.3
-        u(2,t)=-0.3;
-    end
+%     if u(1,t)>=0.3
+%         u(1,t)=0.3;
+%     elseif u(1,t)<=-0.3
+%         u(1,t)=-0.3;
+%     end
+%     
+%     if u(2,t)>0.3
+%         u(2,t)=0.3;
+%     elseif u(2,t)<-0.3
+%         u(2,t)=-0.3;
+%     end
     x(:,t+1)=A*x(:,t)+stepsize*B*u(:,t);
     flagsum=flagsum+sum(flag);
 end

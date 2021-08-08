@@ -8,46 +8,56 @@ x(:,1)=IniSafeLqr.x0;
 u=zeros(2,IniSafeLqr.n);
 %global mode, for local case dual variable should be stored seperately
 %to svae memory
-[K,l]=Control(IniSafeLqr,lambda,ObConsArray,[1 0;0 1]);
+[K,l]=Control(IniSafeLqr,lambda,lambdahat,ObConsArray,[1 0;0 1]);
 value(1)=0;
-value(2)=LagranCost(IniSafeLqr,ObConsArray,lambda,K,l);
+value(2)=LagranCost(IniSafeLqr,ObConsArray,lambda,lambdahat,K,l);
 for t=1:IniSafeLqr.n-1
     u(:,t)=(K{t}*x(:,t)+l(:,t));
     x(:,t+1)=IniSafeLqr.A*x(:,t)+IniSafeLqr.stepsize*IniSafeLqr.B*u(:,t);
     for i=1:size(IniSafeLqr.h,2)
-        lambda(i,t)=lambda(i,t)+alpha*ObConsArray(t).sign(i)*(x(:,t)'*ObConsArray(t).H{i}*x(:,t)+ObConsArray(t).c{i}'*x(:,t)+ObConsArray(t).d{i});
+        if ~isempty(ObConsArray(t).H{1})
+            lambda(i,t)=lambda(i,t)+alpha*ObConsArray(t).sign(i)*(x(:,t)'*ObConsArray(t).H{i}*x(:,t)+ObConsArray(t).c{i}'*x(:,t)+ObConsArray(t).d{i});
+        end
         lambdahat(:,t)=lambdahat(:,t)+alpha*(IniSafeLqr.G*u(:,t)-IniSafeLqr.e);
     end
 end
 
 while abs(value(k)-value(k-1))>epsilon%terminal condition
-    [K,l]=Control(IniSafeLqr,lambda,ObConsArray,[1 0;0 1]);
+    [K,l]=Control(IniSafeLqr,lambda,lambdahat,ObConsArray,[1 0;0 1]);
     for t=1:IniSafeLqr.n-1
         u(:,t)=(K{t}*x(:,t)+l(:,t));
-%         if u(1,t)>=0.3
-%             u(1,t)=0.3;
-%         elseif u(1,t)<=-0.3
-%             u(1,t)=-0.3;
-%         end
-%         
-%         if u(2,t)>0.3
-%             u(2,t)=0.3;
-%         elseif u(2,t)<-0.3
-%             u(2,t)=-0.3;
-%         end
+        %         if u(1,t)>=0.3
+        %             u(1,t)=0.3;
+        %         elseif u(1,t)<=-0.3
+        %             u(1,t)=-0.3;
+        %         end
+        %
+        %         if u(2,t)>0.3
+        %             u(2,t)=0.3;
+        %         elseif u(2,t)<-0.3
+        %             u(2,t)=-0.3;
+        %         end
         
         x(:,t+1)=IniSafeLqr.A*x(:,t)+IniSafeLqr.stepsize*IniSafeLqr.B*u(:,t);
+        lambdahat(:,t)=lambdahat(:,t)+alpha*(IniSafeLqr.G*u(:,t)-IniSafeLqr.e);
+        for i=1:size(IniSafeLqr.G,2)
+            if lambdahat(i,t)<0
+                lambdahat(i,t)=0;
+            end
+        end
         for i=1:size(IniSafeLqr.h,2)
-            lambda(i,t)=lambda(i,t)+alpha*ObConsArray(t).sign(i)*(x(:,t)'*ObConsArray(t).H{i}*x(:,t)+ObConsArray(t).c{i}'*x(:,t)+ObConsArray(t).d{i});
+            if ~isempty(ObConsArray(t).H{1})
+                lambda(i,t)=lambda(i,t)+alpha*ObConsArray(t).sign(i)*(x(:,t)'*ObConsArray(t).H{i}*x(:,t)+ObConsArray(t).c{i}'*x(:,t)+ObConsArray(t).d{i});
+            end
             if lambda(i,t)<0
                 lambda(i,t)=0;
             end
         end
     end
-    value(k+1)=LagranCost(IniSafeLqr,ObConsArray,lambda,K,l);
+    value(k+1)=LagranCost(IniSafeLqr,ObConsArray,lambda,lambdahat,K,l);
     k=k+1;
     alpha=0.01*1/k;
-%     value(k)-value(k-1)
+    %     value(k)-value(k-1)
 end
 value=value(k);
 end

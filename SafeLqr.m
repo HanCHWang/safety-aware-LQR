@@ -15,7 +15,7 @@ classdef SafeLqr
     end
     
     methods
-        function obj = SafeLqr(n,A,B,C,D,Q,R,h,x0,stepsize)
+        function obj = SafeLqr(n,A,B,C,D,Q,R,h,G,e,x0,stepsize)
             obj.n=n;
             obj.A=A;
             obj.B=B;
@@ -24,6 +24,8 @@ classdef SafeLqr
             obj.Q=Q;
             obj.R=R;
             obj.h=h;
+            obj.G=G;
+            obj.e=e;
             obj.x0=x0;
             obj.stepsize=stepsize;
         end
