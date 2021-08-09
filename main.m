@@ -27,17 +27,17 @@ e=[0.3;
     0.3;
     0.3];
 % h={[5*rand,5*rand,3*rand],[2*rand,2*rand,3*rand],[7*rand,7*rand,3*rand]};%multiple circle
-h={[5,5,0.5]};
+h={[2,2,0.5]};
 H=cell(size(h,2),n);
 c=cell(size(h,2),n);
 d=cell(size(h,2),n);
 flag=zeros(size(h,2));
 sign=zeros(size(h,2));
 x=zeros(2,n);%plane movement
-x(:,1)=[10;10];
+x(:,1)=[5;4.9];
 lambda=zeros(size(h,2),n);%no constraint initially
 lambdahat=ones(size(G,2),n);
-epsilon=1;
+epsilon=0.01;
 
 
 for t=1:n
