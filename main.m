@@ -37,7 +37,7 @@ x=zeros(2,n);%plane movement
 x(:,1)=[-5;-4.9];
 lambda=zeros(size(h,2),n);%no constraint initially
 lambdahat=ones(size(G,1),n);
-epsilon=0.01;
+epsilon=0.05;
 
 
 for t=1:n
