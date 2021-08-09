@@ -16,28 +16,28 @@ C=0;
 D=0;%no output in this scenario
 Q=[1 0;
     0 1];
-R=[1 0;
-    0 1];
+R=[50 0;
+    0 50];
 G=[1 0;
     0 1;
     -1 0;
     0 -1];
-e=[2;
-    2;
-    2;
-    2];
+e=[0.5;
+    0.5;
+    0.5;
+    0.5];
 % h={[5*rand,5*rand,3*rand],[2*rand,2*rand,3*rand],[7*rand,7*rand,3*rand]};%multiple circle
-h={[2,2,0.5]};
+h={[2,1,1]};
 H=cell(size(h,2),n);
 c=cell(size(h,2),n);
 d=cell(size(h,2),n);
 flag=zeros(size(h,2));
 sign=zeros(size(h,2));
 x=zeros(2,n);%plane movement
-x(:,1)=[-5;-4.9];
+x(:,1)=[5;4.9];
 lambda=zeros(size(h,2),n);%no constraint initially
 lambdahat=ones(size(G,1),n);
-epsilon=0.05;
+epsilon=0.03;
 
 
 for t=1:n
@@ -84,6 +84,14 @@ while flagsum>0
         signsum=signsum+sign;
         ObConsArray(t)=ObCons(t,h,x(:,t),flag,sign,{H(:,t),c(:,t),d(:,t)});
     end
+%     syms xx
+%     fun=-c{6}(1)/c{6}(2)*xx-d{6}/c{6}(2);
+%     plot(x(1,:),x(2,:));
+%     hold on
+%     viscircles([2,1],1);
+%     hold on
+%     ezplot(fun);
+%     hold on
     [K,l,value(2)]=PrimalDual(IniSafeLqr,ObConsArray,epsilon);
     %first test general cases without convex-to-concave
     % %     while value(k)<value(k-1)

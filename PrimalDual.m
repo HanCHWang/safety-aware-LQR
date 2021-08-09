@@ -16,7 +16,7 @@ for t=1:IniSafeLqr.n-1
     x(:,t+1)=IniSafeLqr.A*x(:,t)+IniSafeLqr.stepsize*IniSafeLqr.B*u(:,t);
     for i=1:size(IniSafeLqr.h,2)
         if ~isempty(ObConsArray(t).H{1})
-            lambda(i,t)=lambda(i,t)+alpha*ObConsArray(t).sign(i)*(x(:,t)'*ObConsArray(t).H{i}*x(:,t)+ObConsArray(t).c{i}'*x(:,t)+ObConsArray(t).d{i});
+            lambda(i,t)=lambda(i,t)+0.01*alpha*ObConsArray(t).sign(i)*(x(:,t)'*ObConsArray(t).H{i}*x(:,t)+ObConsArray(t).c{i}'*x(:,t)+ObConsArray(t).d{i});
         end
         lambdahat(:,t)=lambdahat(:,t)+alpha*(IniSafeLqr.G*u(:,t)-IniSafeLqr.e);
     end
@@ -52,7 +52,7 @@ while abs(value(k)-value(k-1))>epsilon%terminal condition
         end
         for i=1:size(IniSafeLqr.h,2)
             if ~isempty(ObConsArray(t).H{1})
-                lambda(i,t)=lambda(i,t)+alpha*ObConsArray(t).sign(i)*(x(:,t)'*ObConsArray(t).H{i}*x(:,t)+ObConsArray(t).c{i}'*x(:,t)+ObConsArray(t).d{i});
+                lambda(i,t)=lambda(i,t)+0.01*alpha*ObConsArray(t).sign(i)*(x(:,t)'*ObConsArray(t).H{i}*x(:,t)+ObConsArray(t).c{i}'*x(:,t)+ObConsArray(t).d{i});
             end
             if lambda(i,t)<0
                 lambda(i,t)=0;
