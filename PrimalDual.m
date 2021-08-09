@@ -1,14 +1,14 @@
 function [K,l,value]=PrimalDual(IniSafeLqr,ObConsArray,epsilon)
 k=2;
-alpha=1/k;
+alpha=0.1*1/k;
 lambda=ones(size(IniSafeLqr.h,2),IniSafeLqr.n);
-lambdahat=ones(size(IniSafeLqr.e,1),IniSafeLqr.n);
+lambdahat=10*ones(size(IniSafeLqr.e,1),IniSafeLqr.n);
 x=zeros(2,IniSafeLqr.n);
 x(:,1)=IniSafeLqr.x0;
 u=zeros(2,IniSafeLqr.n);
 %global mode, for local case dual variable should be stored seperately
 %to svae memory
-[K,l]=Control(IniSafeLqr,lambda,lambdahat,ObConsArray,[1 0;0 1]);
+[K,l]=Control(IniSafeLqr,lambda,lambdahat,ObConsArray,[2 1;0 3]);
 value(1)=0;
 value(2)=LagranCost(IniSafeLqr,ObConsArray,lambda,lambdahat,K,l);
 for t=1:IniSafeLqr.n-1
@@ -20,10 +20,15 @@ for t=1:IniSafeLqr.n-1
         end
         lambdahat(:,t)=lambdahat(:,t)+alpha*(IniSafeLqr.G*u(:,t)-IniSafeLqr.e);
     end
+    for i=1:size(IniSafeLqr.G,1)
+        if lambdahat(i,t)<0
+            lambdahat(i,t)=0;
+        end
+    end
 end
 
 while abs(value(k)-value(k-1))>epsilon%terminal condition
-    [K,l]=Control(IniSafeLqr,lambda,lambdahat,ObConsArray,[1 0;0 1]);
+    [K,l]=Control(IniSafeLqr,lambda,lambdahat,ObConsArray,[2 1;0 3]);
     for t=1:IniSafeLqr.n-1
         u(:,t)=(K{t}*x(:,t)+l(:,t));
         %         if u(1,t)>=0.3
@@ -56,7 +61,7 @@ while abs(value(k)-value(k-1))>epsilon%terminal condition
     end
     value(k+1)=LagranCost(IniSafeLqr,ObConsArray,lambda,lambdahat,K,l);
     k=k+1;
-    alpha=1/k;
+    alpha=0.1*1/k;
     %     value(k)-value(k-1)
 end
 value=value(k);

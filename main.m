@@ -6,7 +6,7 @@
 clear all
 %%
 %define quantities
-n=50;
+n=100;
 stepsize=1;
 A=[1 0;
     0 1];
@@ -22,10 +22,10 @@ G=[1 0;
     0 1;
     -1 0;
     0 -1];
-e=[0.3;
-    0.3;
-    0.3;
-    0.3];
+e=[2;
+    2;
+    2;
+    2];
 % h={[5*rand,5*rand,3*rand],[2*rand,2*rand,3*rand],[7*rand,7*rand,3*rand]};%multiple circle
 h={[2,2,0.5]};
 H=cell(size(h,2),n);
@@ -34,9 +34,9 @@ d=cell(size(h,2),n);
 flag=zeros(size(h,2));
 sign=zeros(size(h,2));
 x=zeros(2,n);%plane movement
-x(:,1)=[5;4.9];
+x(:,1)=[-5;-4.9];
 lambda=zeros(size(h,2),n);%no constraint initially
-lambdahat=ones(size(G,2),n);
+lambdahat=ones(size(G,1),n);
 epsilon=0.01;
 
 
