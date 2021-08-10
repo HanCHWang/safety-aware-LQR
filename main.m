@@ -6,7 +6,7 @@
 clear all
 %%
 %define quantities
-n=100;
+n=50;
 stepsize=1;
 A=[1 0;
     0 1];
@@ -27,14 +27,14 @@ e=[0.5;
     0.5;
     0.5];
 % h={[5*rand,5*rand,3*rand],[2*rand,2*rand,3*rand],[7*rand,7*rand,3*rand]};%multiple circle
-h={[2,1,1]};
+h={[2,2,1]};
 H=cell(size(h,2),n);
 c=cell(size(h,2),n);
 d=cell(size(h,2),n);
 flag=zeros(size(h,2));
 sign=zeros(size(h,2));
 x=zeros(2,n);%plane movement
-x(:,1)=[5;4.9];
+x(:,1)=[5;4];
 lambda=zeros(size(h,2),n);%no constraint initially
 lambdahat=ones(size(G,1),n);
 epsilon=0.03;
@@ -82,6 +82,7 @@ while flagsum>0
         flagsum=flagsum+flag;
         sign=FeasiCheck(ObConsArray(t),1);
         signsum=signsum+sign;
+%         sign=1;%have a try at active all the constraints
         ObConsArray(t)=ObCons(t,h,x(:,t),flag,sign,{H(:,t),c(:,t),d(:,t)});
     end
 %     syms xx
@@ -94,31 +95,31 @@ while flagsum>0
 %     hold on
     [K,l,value(2)]=PrimalDual(IniSafeLqr,ObConsArray,epsilon);
     %first test general cases without convex-to-concave
-    % %     while value(k)<value(k-1)
-    % % %         value(k)-value(k-1)
-    % %         [H,c,d]=Convexification(ObConsArray);
-    % %         for t=1:n
-    % %             ObConsArray(t).H=H(:,t);
-    % %             ObConsArray(t).c=c(:,t);
-    % %             ObConsArray(t).d=d(:,t);
-    % %             %             ObConsArray(t)=ObCons(t,h,x(:,t),flag,sign,{H(:,t),c(:,t),d(:,t)});
-    % %         end
-    % %         [K,l,value(k+1)]=PrimalDual(IniSafeLqr,ObConsArray,epsilon);
-    % %         for t=1:n-1
-    % %             x(:,t+1)=A*x(:,t)+stepsize*B*(K{t}*x(:,t)+l(:,t));
-    % %         end
-    % %
-    % %         k=k+1;
-    % %     end
-    %     flagsum=0;
-    %     signsum=0;
-    %     for t=1:n
-    %         flag=FeasiCheck(ObConsArray(t),0);
-    %         flagsum=flagsum+flag;
-    %         sign=FeasiCheck(ObConsArray(t),1);
-    %         signsum=signsum+sign;
-    %         ObConsArray(t)=ObCons(t,h,x(:,t),flag,sign,{H(:,t),c(:,t),d(:,t)});
-    %     end
+        while value(k)<value(k-1)
+    %         value(k)-value(k-1)
+            [H,c,d]=Convexification(ObConsArray);
+            for t=1:n
+                ObConsArray(t).H=H(:,t);
+                ObConsArray(t).c=c(:,t);
+                ObConsArray(t).d=d(:,t);
+                %             ObConsArray(t)=ObCons(t,h,x(:,t),flag,sign,{H(:,t),c(:,t),d(:,t)});
+            end
+            [K,l,value(k+1)]=PrimalDual(IniSafeLqr,ObConsArray,epsilon);
+            for t=1:n-1
+                x(:,t+1)=A*x(:,t)+stepsize*B*(K{t}*x(:,t)+l(:,t));
+            end
+    
+            k=k+1;
+        end
+        flagsum=0;
+        signsum=0;
+        for t=1:n
+            flag=FeasiCheck(ObConsArray(t),0);
+            flagsum=flagsum+flag;
+            sign=FeasiCheck(ObConsArray(t),1);
+            signsum=signsum+sign;
+            ObConsArray(t)=ObCons(t,h,x(:,t),flag,sign,{H(:,t),c(:,t),d(:,t)});
+        end
     %     signsum
     %     flagsum
     for t=1:n-1
