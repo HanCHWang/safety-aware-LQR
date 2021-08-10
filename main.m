@@ -26,8 +26,8 @@ e=[0.5;
     0.5;
     0.5;
     0.5];
-% h={[5*rand,5*rand,3*rand],[2*rand,2*rand,3*rand],[7*rand,7*rand,3*rand]};%multiple circle
-h={[2,2,1]};
+h={[2*rand,2*rand,1*rand],[3*rand,3*rand,1*rand],[1*rand,1*rand,0.5*rand]};%multiple circle
+% h={[2,2,1]};
 H=cell(size(h,2),n);
 c=cell(size(h,2),n);
 d=cell(size(h,2),n);
@@ -37,7 +37,7 @@ x=zeros(2,n);%plane movement
 x(:,1)=[5;4];
 lambda=zeros(size(h,2),n);%no constraint initially
 lambdahat=ones(size(G,1),n);
-epsilon=0.03;
+epsilon=3;
 
 
 for t=1:n
@@ -73,7 +73,7 @@ end
 
 value(1)=100000;
 k=2;
-while flagsum>0
+while sum(flagsum,1)>0
     flagsum=0;
     signsum=0;
     [H,c,d]=Convexification(ObConsArray);
@@ -82,7 +82,7 @@ while flagsum>0
         flagsum=flagsum+flag;
         sign=FeasiCheck(ObConsArray(t),1);
         signsum=signsum+sign;
-%         sign=1;%have a try at active all the constraints
+%         sign=[1;1;1];%have a try at active all the constraints
         ObConsArray(t)=ObCons(t,h,x(:,t),flag,sign,{H(:,t),c(:,t),d(:,t)});
     end
 %     syms xx
@@ -95,7 +95,7 @@ while flagsum>0
 %     hold on
     [K,l,value(2)]=PrimalDual(IniSafeLqr,ObConsArray,epsilon);
     %first test general cases without convex-to-concave
-        while value(k)<value(k-1)
+        while value(k)<value(k-1)&&sum(flagsum,1)==0
     %         value(k)-value(k-1)
             [H,c,d]=Convexification(ObConsArray);
             for t=1:n
@@ -129,6 +129,11 @@ while flagsum>0
     value(1)=100000;
     k=2;
 end
+plot(x(1,:),x(2,:));
+hold on
+viscircles([h{1}(1),h{1}(2)],h{1}(3));
+viscircles([h{2}(1),h{2}(2)],h{2}(3));
+viscircles([h{3}(1),h{3}(2)],h{3}(3));
 
 
 
