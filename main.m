@@ -26,18 +26,18 @@ e=[0.5;
     0.5;
     0.5;
     0.5];
-h={[2*rand,2*rand,1*rand],[3*rand,3*rand,1*rand],[1*rand,1*rand,0.5*rand]};%multiple circle
-% h={[2,2,1]};
+% h={[2*rand,2*rand,1*rand],[3*rand,3*rand,1*rand],[1*rand,1*rand,0.5*rand]};%multiple circle
+h={[2,2,1]};
 H=cell(size(h,2),n);
 c=cell(size(h,2),n);
 d=cell(size(h,2),n);
 flag=zeros(size(h,2));
 sign=zeros(size(h,2));
 x=zeros(2,n);%plane movement
-x(:,1)=[5;4];
+x(:,1)=[5;5];
 lambda=zeros(size(h,2),n);%no constraint initially
 lambdahat=ones(size(G,1),n);
-epsilon=3;
+epsilon=0.3;
 
 
 for t=1:n
