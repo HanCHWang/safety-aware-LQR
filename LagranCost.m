@@ -8,14 +8,14 @@ u=zeros(2,IniSafeLqr.n);
         u(:,t)=(K{t}*x(:,t)+l(:,t));
         x(:,t+1)=IniSafeLqr.A*x(:,t)+IniSafeLqr.stepsize*IniSafeLqr.B*u(:,t);
         value=value+x(:,t)'*IniSafeLqr.Q*x(:,t)+u(:,t)'*IniSafeLqr.R*u(:,t);%primal cost
-        value=value+lambdahat(:,t)'*(IniSafeLqr.G*u(:,t)-IniSafeLqr.e);
-        if ~isempty(ObConsArray(t).H{1})
-            for i=1:size(IniSafeLqr.h,2)
-                value=value+ObConsArray(t).sign(i)*lambda(i,t)*x(:,t)'*ObConsArray(t).H{i}*x(:,t);%quadratic dual cost
-                value=value+ObConsArray(t).sign(i)*lambda(i,t)*ObConsArray(t).c{i}'*x(:,t);%linear dual cost
-                value=value+ObConsArray(t).sign(i)*lambda(i,t)*ObConsArray(t).d{i};
-            end
-        end
+%         value=value+lambdahat(:,t)'*(IniSafeLqr.G*u(:,t)-IniSafeLqr.e);
+%         if ~isempty(ObConsArray(t).H{1})
+%             for i=1:size(IniSafeLqr.h,2)
+%                 value=value+ObConsArray(t).sign(i)*lambda(i,t)*x(:,t)'*ObConsArray(t).H{i}*x(:,t);%quadratic dual cost
+%                 value=value+ObConsArray(t).sign(i)*lambda(i,t)*ObConsArray(t).c{i}'*x(:,t);%linear dual cost
+%                 value=value+ObConsArray(t).sign(i)*lambda(i,t)*ObConsArray(t).d{i};
+%             end
+%         end
     end
 
 end
