@@ -36,6 +36,7 @@ syms x y;
 X = [x^2;x*y;y^2;x;y;1];
 ellipse = data*X;
 ezplot(ellipse);
+hold on
 end
 
 

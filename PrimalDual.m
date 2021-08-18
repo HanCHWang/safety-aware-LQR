@@ -1,7 +1,7 @@
 function [K,l,value]=PrimalDual(IniSafeLqr,ObConsArray,epsilon)
 k=2;
-alpha=0.1;
-lambda=ones(size(IniSafeLqr.h,2),IniSafeLqr.n);
+alpha=0.001;
+lambda=rand(size(IniSafeLqr.h,2),IniSafeLqr.n);
 lambdahat=10*ones(size(IniSafeLqr.e,1),IniSafeLqr.n);
 x=zeros(2,IniSafeLqr.n);
 x(:,1)=IniSafeLqr.x0;
@@ -61,7 +61,7 @@ while abs(value(k)-value(k-1))>epsilon&&k<1000%terminal condition
     end
     value(k+1)=LagranCost(IniSafeLqr,ObConsArray,lambda,lambdahat,K,l);
     k=k+1;
-    alpha=0.1;
+    alpha=0.001;
     %     value(k)-value(k-1)
 end
 value=value(k);
