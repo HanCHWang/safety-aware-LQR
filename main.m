@@ -6,7 +6,7 @@
 clear all
 %%
 %define quantities
-n=50;
+n=500;
 stepsize=1;
 A=[1 0;
     0 1];
@@ -51,7 +51,7 @@ x=zeros(2,n);%plane movement
 x(:,1)=[5;4];
 lambda=zeros(size(h,2),n);%no constraint initially
 lambdahat=ones(size(G,1),n);
-epsilon=0.003;
+epsilon=0.00003;
 
 
 H=cell(N,n);
@@ -149,6 +149,10 @@ while sum(flagsum,1)>0
     k=2;
     plot(x(1,:),x(2,:));
     hold on
+    drawnow
+    LineObjects = findall(figure(1),'type','line');
+    hh = LineObjects(size(LineObjects));
+    delete (hh);
 end
 plot(x(1,:),x(2,:));
 hold on
