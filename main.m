@@ -6,7 +6,7 @@
 clear all
 %%
 %define quantities
-n=500;
+n=200;
 stepsize=1;
 A=[1 0;
     0 1];
@@ -34,7 +34,7 @@ e=[0.5;
 %% 
 %
 P = 0.15; %
-N = 5;%
+N = 3;%
 areaStart = [1,1];
 areaEnd = [5,5];
 dis = 0.5; %
