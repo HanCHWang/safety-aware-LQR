@@ -6,7 +6,7 @@
 clear all
 %%
 %define quantities
-n=200;
+n=50;
 stepsize=1;
 A=[1 0;
     0 1];
@@ -22,10 +22,10 @@ G=[1 0;
     0 1;
     -1 0;
     0 -1];
-e=[0.5;
-    0.5;
-    0.5;
-    0.5];
+e=[0.3;
+    0.3;
+    0.3;
+    0.3];
 
 %%
 %define obstacles
@@ -45,10 +45,11 @@ for i=1:N
     [Hellipsoid{i}, Cellipsoid{i}, Dellipsoid{i}] = elliregresstest(scatter_dots);%generate ellipsoid
     h{i}= {Hellipsoid{i}, Cellipsoid{i}', Dellipsoid{i}};
 end
+% load('example2.mat');
 flag=zeros(size(h,2));
 sign=zeros(size(h,2));
 x=zeros(2,n);%plane movement
-x(:,1)=[5;4];
+x(:,1)=[7;7];
 lambda=zeros(size(h,2),n);%no constraint initially
 lambdahat=ones(size(G,1),n);
 epsilon=0.00003;
@@ -101,8 +102,10 @@ while sum(flagsum,1)>0
         flagsum=flagsum+flag;
         sign=FeasiCheck(ObConsArray(t),1);
         signsum=signsum+sign;
-%         sign=1;%have a try at active all the constraints
-        ObConsArray(t)=ObCons(t,h,x(:,t),flag,sign,{H(:,t),c(:,t),d(:,t)});
+%         sign=[1,1,1];%have a try at active all the constraints
+%         ObConsArray(t)=ObCons(t,h,x(:,t),flag,sign,{H(:,t),c(:,t),d(:,t)});
+        ObConsArray(t).flag=flag;
+        ObConsArray(t).sign=sign;
     end
 %     syms xx
 %     fun=-c{6}(1)/c{6}(2)*xx-d{6}/c{6}(2);
@@ -137,7 +140,9 @@ while sum(flagsum,1)>0
             flagsum=flagsum+flag;
             sign=FeasiCheck(ObConsArray(t),1);
             signsum=signsum+sign;
-            ObConsArray(t)=ObCons(t,h,x(:,t),flag,sign,{H(:,t),c(:,t),d(:,t)});
+%             ObConsArray(t)=ObCons(t,h,x(:,t),flag,sign,{H(:,t),c(:,t),d(:,t)});
+            ObConsArray(t).flag=flag;
+            ObConsArray(t).sign=sign;
         end
     %     signsum
     %     flagsum
