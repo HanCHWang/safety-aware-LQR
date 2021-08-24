@@ -106,9 +106,9 @@ while sum(flagsum,1)>0
 %         ObConsArray(t)=ObCons(t,h,x(:,t),flag,sign,{H(:,t),c(:,t),d(:,t)});
         ObConsArray(t).flag=flag;
         ObConsArray(t).sign=sign;
-        ObConsArray(t).H=H;
-        ObConsArray(t).c=c;
-        ObConsArray(t).d=d;
+        ObConsArray(t).H=H(:,t);
+        ObConsArray(t).c=c(:,t);
+        ObConsArray(t).d=d(:,t);
     end
 %     syms xx
 %     fun=-c{6}(1)/c{6}(2)*xx-d{6}/c{6}(2);
