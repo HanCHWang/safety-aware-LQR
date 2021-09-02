@@ -35,14 +35,14 @@ e=[0.3;
 %%
 %
 P = 0.1; %
-N = 9;%
+N = 15;%
 areaStart = [0,0];
 areaEnd = [2,2];
 dis = 0; %
 % ellipse = ellipsegenerate(P,N,areaStart,areaEnd,dis);
 % load('better2.mat');
 load('ellipse6.mat');
-for i=1:9
+for i=1:N
     scatter_dots = ellipse{i};
     [Hellipsoid{i}, Cellipsoid{i}, Dellipsoid{i}] = elliregresstest(scatter_dots);%generate ellipsoid
     h{i}= {Hellipsoid{i}, Cellipsoid{i}', Dellipsoid{i}};
@@ -160,12 +160,12 @@ while sum(flagsum,1)>0
     end
     value(1)=1000;
     k=2;
-    plot(x(1,:),x(2,:));
-    hold on
-    drawnow
-    LineObjects = findall(figure(1),'type','line');
-    hh = LineObjects(size(LineObjects));
-    delete (hh);
+%     plot(x(1,:),x(2,:));
+%     hold on
+%     drawnow
+%     LineObjects = findall(figure(1),'type','line');
+%     hh = LineObjects(size(LineObjects));
+%     delete (hh);
 end
 plot(x(1,:),x(2,:));
 hold on

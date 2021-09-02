@@ -8,7 +8,7 @@ x(:,1)=IniSafeLqr.x0;
 u=zeros(2,IniSafeLqr.n);
 %global mode, for local case dual variable should be stored seperately
 %to svae memory
-[K,l]=Control(IniSafeLqr,lambda,lambdahat,ObConsArray,[2 1;0 3]);
+[K,l]=Control(IniSafeLqr,lambda,lambdahat,ObConsArray,[20 1;0 30]);
 value(1)=0;
 value(2)=LagranCost(IniSafeLqr,ObConsArray,lambda,lambdahat,K,l);
 for t=1:IniSafeLqr.n-1
@@ -27,8 +27,8 @@ for t=1:IniSafeLqr.n-1
     end
 end
 
-while abs(value(k)-value(k-1))>epsilon&&k<1000%terminal condition
-    [K,l]=Control(IniSafeLqr,lambda,lambdahat,ObConsArray,[2 1;0 3]);
+while abs(value(k)-value(k-1))>epsilon&&k<10000%terminal condition
+    [K,l]=Control(IniSafeLqr,lambda,lambdahat,ObConsArray,[20 0;0 30]);
     for t=1:IniSafeLqr.n-1
         u(:,t)=(K{t}*x(:,t)+l(:,t));
         %         if u(1,t)>=0.3

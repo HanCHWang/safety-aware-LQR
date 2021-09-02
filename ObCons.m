@@ -1,6 +1,6 @@
 classdef ObCons
     properties
-        t                    %time t
+        t                   %time t
         h                   %constraints
         xt                  %state at time t
         flag               %flag means violate constraints or not
